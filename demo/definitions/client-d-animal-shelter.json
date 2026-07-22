@@ -1,0 +1,17 @@
+{
+  "client": "client-d",
+  "record_type": "adoption_application",
+  "fields": [
+    { "name": "applicant_name", "label": "Applicant name", "type": "text", "required": true, "constraints": { "max_length": 120 } },
+    { "name": "applicant_id", "label": "Applicant ID", "type": "text", "required": true, "constraints": { "pattern": "^[A-Z]{2}[0-9]{6}$" } },
+    { "name": "applicant_email", "label": "E-mail address", "type": "email", "required": true },
+    { "name": "applicant_phone", "label": "Phone number", "type": "phone", "required": true },
+    { "name": "visit_date", "label": "Preferred visit date", "type": "date", "required": true },
+    { "name": "animal_type", "label": "Animal you want to adopt", "type": "choice", "required": true, "options": ["dog", "cat", "rabbit", "bird"] },
+    { "name": "household", "label": "Household situation", "type": "multi_choice", "required": false, "options": ["children_under_5", "other_dogs", "other_cats", "elderly_residents"], "constraints": { "max_selected": 3 } },
+    { "name": "motivation", "label": "Why do you want to adopt?", "type": "long_text", "required": true, "constraints": { "min_length": 50, "max_length": 1500 } },
+    { "name": "monthly_budget", "label": "Monthly pet budget", "type": "number", "required": true, "constraints": { "min": 20, "max": 5000 }, "sensitivity": "internal" },
+    { "name": "has_prior_pets", "label": "Has owned pets before", "type": "boolean", "required": true },
+    { "name": "vet_reference", "label": "Vet reference letter", "type": "file", "required": false, "constraints": { "accepted": ["pdf", "jpg", "png"] } }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "_note": "Expected to be valid.",
+    "organisation_name": "Northern Community Trust",
+    "registry_number": "580123456",
+    "contact_person": "Avi Shalom",
+    "contact_email": "avi@northerntrust.org.il",
+    "contact_phone": "052-3334444",
+    "amount_requested": 75000,
+    "funding_round": "2026-q2",
+    "focus_areas": ["education", "welfare"],
+    "project_description": "A two-year after-school programme for children in three neighbourhoods with the lowest matriculation rates in the district. The programme provides tutoring four afternoons a week, a hot meal, and a monthly parent workshop. We ran a pilot last year with 40 children and saw measurable improvement in attendance and grades, and we now want to expand to 150 children across three sites.",
+    "project_start": "2026-09-01",
+    "project_end": "2028-08-31",
+    "budget_file": "northern-trust-budget.xlsx",
+    "previously_funded": false,
+    "annual_turnover": 1250000
+  },
+  {
+    "_note": "Boundary and type problems.",
+    "organisation_name": "Green Valley Association",
+    "registry_number": "58012345",
+    "contact_person": "Noa Bar",
+    "contact_email": "noa.greenvalley.org",
+    "amount_requested": "50000",
+    "funding_round": "2026-q2",
+    "focus_areas": ["environment", "education", "health", "culture"],
+    "project_description": "Tree planting across the valley.",
+    "project_start": "2026-06-01",
+    "project_end": "2026-05-01",
+    "budget_file": "budget.docx",
+    "previously_funded": true,
+    "annual_turnover": 0
+  },
+  {
+    "_note": "Missing and empty values.",
+    "organisation_name": "Coastal Youth Initiative",
+    "registry_number": "580998877",
+    "contact_person": "Tal Ashkenazi",
+    "contact_email": "tal@coastalyouth.org.il",
+    "contact_phone": "",
+    "amount_requested": 500,
+    "funding_round": "2027-q1",
+    "focus_areas": [],
+    "project_description": "We would like to run a summer sailing programme for teenagers from the port neighbourhoods, giving them access to the sea and to qualified instruction that would otherwise be far beyond what their families could afford. The programme would run for six weeks each summer.",
+    "project_start": "2026-07-01",
+    "project_end": "2026-08-15",
+    "previously_funded": false
+  }
+]

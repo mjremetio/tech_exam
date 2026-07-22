@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part B — live library demo</title>
+<style>
+  :root {
+    --ink: #1a1f2b; --ink-soft: #4a5264; --ink-faint: #8a91a3;
+    --paper: #fbfaf7; --card: #ffffff; --accent: #2f5d8a; --accent-soft: #e8eff6;
+    --rule: #e4e2db; --err: #b3372f; --err-soft: #fbeeed; --warn: #8a6d1f; --warn-soft: #faf3dd;
+    --ok: #2e7d4f; --ok-soft: #e9f5ee;
+    --mono: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px; line-height: 1.6; }
+  a { color: var(--accent); }
+  header { background: var(--card); border-bottom: 1px solid var(--rule); padding: 1.6rem 1.5rem; }
+  .inner { max-width: 66rem; margin: 0 auto; }
+  h1 { margin: 0 0 0.3rem; font-size: 1.4rem; }
+  .sub { color: var(--ink-soft); margin: 0.2rem 0 0; font-size: 0.92rem; }
+  .sub code, code.inline { font-family: var(--mono); font-size: 0.85em; background: #f1efe9; border-radius: 4px; padding: 0.05em 0.3em; }
+  .back { font-size: 0.85rem; }
+  .tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0 0; }
+  .tabs button { background: transparent; border: 1px solid var(--rule); color: var(--ink-soft);
+    border-radius: 999px; padding: 0.35rem 0.95rem; font: inherit; font-size: 0.88rem; cursor: pointer; }
+  .tabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .tabs button .badge { font-size: 0.72em; opacity: 0.8; margin-left: 0.35em; }
+  .tabs button.unseen { border-style: dashed; }
+  main { padding: 1.6rem 1.5rem 5rem; }
+  .unseen-note { background: var(--accent-soft); border-radius: 8px; padding: 0.7rem 1rem; font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 1.2rem; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1.2rem 1.4rem; }
+  .card h3 { margin: 0 0 0.3rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+  .card .lead { margin: 0 0 1rem; font-size: 0.82rem; color: var(--ink-faint); }
+  .fld { margin-bottom: 0.9rem; }
+  .fld label.main { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .req { color: var(--err); }
+  .kind { color: var(--ink-faint); font-weight: 400; font-family: var(--mono); font-size: 0.78em; margin-left: 0.35em; }
+  .sens { display: inline-block; background: var(--warn-soft); color: var(--warn); font-size: 0.7rem;
+    border-radius: 4px; padding: 0 0.4em; margin-left: 0.4em; vertical-align: 1px; }
+  input[type=text], input[type=tel], input[type=email], input[type=date], input[type=number], select, textarea {
+    width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--rule); border-radius: 6px;
+    font: inherit; font-size: 0.92rem; background: #fff; color: var(--ink); }
+  textarea { min-height: 4rem; resize: vertical; }
+  .hint { color: var(--ink-faint); font-size: 0.78rem; margin-top: 0.15rem; }
+  .cbg { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.15rem 1rem; }
+  .cbg label, .cb label { display: flex; gap: 0.45rem; align-items: center; font-size: 0.9rem; font-weight: 400; }
+  .fld.invalid input, .fld.invalid select, .fld.invalid textarea { border-color: var(--err); background: var(--err-soft); }
+  .fld .fld-issues { margin: 0.2rem 0 0; padding: 0; list-style: none; }
+  .fld .fld-issues li { color: var(--err); font-size: 0.8rem; }
+  button.primary { background: var(--accent); color: #fff; border: 0; border-radius: 6px;
+    padding: 0.55rem 1.2rem; font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 6px; padding: 0.5rem 1rem; font: inherit; font-size: 0.86rem; cursor: pointer; }
+  .btnrow { display: flex; gap: 0.6rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+  .verdict { font-weight: 700; font-size: 0.88rem; padding: 0.15rem 0.6rem; border-radius: 6px; }
+  .verdict.ok { background: var(--ok-soft); color: var(--ok); }
+  .verdict.bad { background: var(--err-soft); color: var(--err); }
+  .flash { margin-top: 0.8rem; font-size: 0.9rem; }
+  .issues { margin: 0.4rem 0 0; padding: 0; list-style: none; font-size: 0.85rem; }
+  .issues li { margin: 0.2rem 0; padding-left: 1.4rem; text-indent: -1.4rem; }
+  .issues li .mark { display: inline-block; width: 1.1rem; text-indent: 0; }
+  .issues li.e { color: var(--err); }
+  .issues li.w { color: var(--warn); }
+  .issues code { font-family: var(--mono); font-size: 0.82em; background: #f1efe9; color: var(--ink-soft); border-radius: 4px; padding: 0 0.3em; }
+  .rec { border: 1px solid var(--rule); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.7rem; background: #fff; }
+  .rec .head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .rec .head .n { font-weight: 700; font-size: 0.86rem; }
+  .rec .note { color: var(--ink-soft); font-size: 0.82rem; margin: 0.25rem 0 0; font-style: italic; }
+  pre { background: #232733; color: #e8eaf0; border-radius: 8px; padding: 0.7rem 0.9rem;
+    overflow-x: auto; font-size: 0.74rem; line-height: 1.5; font-family: var(--mono); margin: 0.4rem 0 0; }
+  details { margin-top: 0.6rem; }
+  summary { cursor: pointer; color: var(--accent); font-size: 0.84rem; }
+  .empty { color: var(--ink-faint); font-size: 0.9rem; font-style: italic; }
+  .banner { background: var(--err-soft); color: var(--err); border: 1px solid var(--err);
+    border-radius: 8px; padding: 1rem; margin: 1rem 0; display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <p class="back"><a href="/">&larr; Back to the submission</a></p>
+    <h1>Part B — live library demo</h1>
+    <p class="sub">This page loads the <strong>compiled Part B library</strong> (<code>validateRecord</code> and <code>describeForm</code> from <code>dist/</code>) and runs it in your browser. Left: a form rendered entirely from <code>describeForm</code>'s returned data structure — type into it and press <strong>Validate</strong> to run the real <code>validateRecord</code>. Right: every sample record checked live, plus the raw data structure the form was built from.</p>
+    <p class="sub">The library contains no client-specific code. The same functions handle all three sample clients and <strong>client-d</strong>, a shelter the library has never seen — added here as a definition file only.</p>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</header>
+
+<main><div class="inner">
+  <div class="banner" id="err-banner"></div>
+  <div id="app"></div>
+</div></main>
+
+<script type="module">
+import { validateRecord, describeForm } from "./lib/index.js";
+
+const CLIENTS = [
+  { def: "client-a-city-maintenance", rec: "client-a-records" },
+  { def: "client-b-grant-foundation", rec: "client-b-records" },
+  { def: "client-c-clinic-referrals", rec: "client-c-records" },
+  { def: "client-d-animal-shelter",   rec: null, unseen: true },
+];
+
+const app = document.getElementById("app");
+const tabs = document.getElementById("tabs");
+let active = 0;
+
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v);
+  }
+  for (const c of kids) n.append(c);
+  return n;
+}
+
+async function loadJSON(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+  return r.json();
+}
+
+function hintText(f) {
+  const h = f.hints || {}, p = [];
+  if (h.min_length != null) p.push(`min ${h.min_length} chars`);
+  if (h.max_length != null) p.push(`max ${h.max_length} chars`);
+  if (h.min != null) p.push(`min ${h.min}`);
+  if (h.max != null) p.push(`max ${h.max}`);
+  if (h.min_selected != null) p.push(`select ≥ ${h.min_selected}`);
+  if (h.max_selected != null) p.push(`select ≤ ${h.max_selected}`);
+  if (h.pattern) p.push(`pattern ${h.pattern}`);
+  if (h.accept) p.push(h.accept.join(" "));
+  return p.join(" · ");
+}
+
+function renderField(f) {
+  const wrap = el("div", { class: "fld", "data-field": f.name });
+  const label = el("label", { class: "main" });
+  label.append(f.label);
+  if (f.required) label.append(el("span", { class: "req" }, " *"));
+  label.append(el("span", { class: "kind" }, f.input));
+  if (f.sensitivity) label.append(el("span", { class: "sens" }, f.sensitivity));
+  wrap.append(label);
+
+  if (f.input === "textarea") wrap.append(el("textarea", { name: f.name }));
+  else if (f.input === "select") {
+    const s = el("select", { name: f.name }, el("option", { value: "" }, "— choose —"));
+    for (const o of f.options || []) s.append(el("option", { value: o.value }, o.label));
+    wrap.append(s);
+  } else if (f.input === "checkbox_group") {
+    const g = el("div", { class: "cbg" });
+    for (const o of f.options || []) g.append(el("label", {}, el("input", { type: "checkbox", name: f.name, value: o.value }), o.label));
+    wrap.append(g);
+  } else if (f.input === "checkbox") {
+    wrap.append(el("div", { class: "cb" }, el("label", {}, el("input", { type: "checkbox", name: f.name }), "Yes")));
+  } else if (f.input === "file") {
+    wrap.append(el("input", { type: "text", name: f.name, placeholder: "filename, e.g. scan.pdf" }));
+  } else {
+    wrap.append(el("input", { type: f.input, name: f.name }));
+  }
+  const h = hintText(f);
+  if (h) wrap.append(el("div", { class: "hint" }, h));
+  wrap.append(el("ul", { class: "fld-issues" }));
+  return wrap;
+}
+
+// The HTML form only produces strings; the library refuses to coerce (see
+// README), so converting to real types before validation is the frontend's job.
+function collectRecord(formEl, desc) {
+  const record = {};
+  for (const f of desc.fields) {
+    if (f.input === "checkbox") record[f.name] = formEl.querySelector(`input[name="${f.name}"]`).checked;
+    else if (f.input === "checkbox_group") {
+      const v = [...formEl.querySelectorAll(`input[name="${f.name}"]:checked`)].map(b => b.value);
+      if (v.length) record[f.name] = v;
+    } else if (f.input === "number") {
+      const v = formEl.querySelector(`[name="${f.name}"]`).value.trim();
+      if (v !== "") record[f.name] = Number(v);
+    } else {
+      const v = formEl.querySelector(`[name="${f.name}"]`).value;
+      if (v !== "") record[f.name] = v;
+    }
+  }
+  return record;
+}
+
+function issueList(issues) {
+  const ul = el("ul", { class: "issues" });
+  for (const i of issues) {
+    const li = el("li", { class: i.severity === "error" ? "e" : "w" });
+    li.append(el("span", { class: "mark" }, i.severity === "error" ? "✗" : "⚠"));
+    li.append(el("code", {}, i.code), " ", i.message);
+    ul.append(li);
+  }
+  return ul;
+}
+
+function badge(valid) {
+  return el("span", { class: "verdict " + (valid ? "ok" : "bad") }, valid ? "valid: true" : "valid: false");
+}
+
+async function render() {
+  [...tabs.children].forEach((b, i) => b.classList.toggle("active", i === active));
+  app.replaceChildren(el("p", { class: "empty" }, "loading…"));
+  const c = CLIENTS[active];
+
+  const def = await loadJSON(`./definitions/${c.def}.json`);
+  const desc = describeForm(def);
+  const records = c.rec ? await loadJSON(`./sample-records/${c.rec}.json`) : null;
+
+  const cols = el("div", { class: "cols" });
+
+  // left: interactive form
+  const formCard = el("div", { class: "card" },
+    el("h3", {}, `${def.client} · ${def.record_type}`),
+    el("p", { class: "lead" }, "Form rendered from describeForm; press Validate to run validateRecord."));
+  const formEl = el("div", {});
+  for (const f of desc.fields) formEl.append(renderField(f));
+  formCard.append(formEl);
+
+  const out = el("div", { class: "flash" });
+  const validate = el("button", { class: "primary", onclick: () => {
+    const record = collectRecord(formEl, desc);
+    const result = validateRecord(def, record);
+    formEl.querySelectorAll(".fld").forEach(w => { w.classList.remove("invalid"); w.querySelector(".fld-issues").replaceChildren(); });
+    for (const e of result.errors) {
+      const w = formEl.querySelector(`.fld[data-field="${e.field}"]`);
+      if (w) { w.classList.add("invalid"); w.querySelector(".fld-issues").append(el("li", {}, e.message)); }
+    }
+    out.replaceChildren(badge(result.valid), issueList([...result.errors, ...result.warnings]),
+      el("details", {}, el("summary", {}, "record sent + full result (data structures)"),
+        el("pre", {}, JSON.stringify({ record, result }, null, 2))));
+  } }, "Validate");
+  const clear = el("button", { class: "ghost", onclick: () => {
+    formEl.querySelectorAll("input, select, textarea").forEach(i => { if (i.type === "checkbox") i.checked = false; else i.value = ""; });
+    formEl.querySelectorAll(".fld").forEach(w => { w.classList.remove("invalid"); w.querySelector(".fld-issues").replaceChildren(); });
+    out.replaceChildren();
+  } }, "Clear");
+  formCard.append(el("div", { class: "btnrow" }, validate, clear), out);
+  formCard.append(el("details", {}, el("summary", {}, "describeForm output (the Part 2 data structure)"),
+    el("pre", {}, JSON.stringify(desc, null, 2))));
+
+  // right: sample records or, for the unseen client, a note
+  const rightCard = el("div", { class: "card" });
+  if (records) {
+    rightCard.append(el("h3", {}, `Sample records · validated live (${records.length})`),
+      el("p", { class: "lead" }, "The starter package's own records, each run through validateRecord in your browser."));
+    records.forEach((record, i) => {
+      const result = validateRecord(def, record);
+      const rec = el("div", { class: "rec" });
+      rec.append(el("div", { class: "head" }, el("span", { class: "n" }, `Record ${i + 1}`), badge(result.valid)));
+      if (record._note) rec.append(el("p", { class: "note" }, record._note));
+      if (result.errors.length || result.warnings.length) rec.append(issueList([...result.errors, ...result.warnings]));
+      rec.append(el("details", {}, el("summary", {}, "record + result"), el("pre", {}, JSON.stringify({ record, result }, null, 2))));
+      rightCard.append(rec);
+    });
+  } else {
+    rightCard.append(el("h3", {}, "The fourth-client guarantee"),
+      el("p", { class: "lead" }, "This client has no sample records in the starter package. It exists only as the definition file below — yet the same code renders its form and validates it. Try submitting the empty form, or an ID that isn't two letters and six digits."),
+      el("details", { open: "" }, el("summary", {}, "client-d definition (data only, no code)"),
+        el("pre", {}, JSON.stringify(def, null, 2))));
+  }
+
+  cols.append(formCard, rightCard);
+  app.replaceChildren(cols);
+}
+
+try {
+  CLIENTS.forEach((c, i) => {
+    const b = el("button", { class: c.unseen ? "unseen" : "", onclick: () => { active = i; render(); } }, c.def.split("-")[0] + "-" + c.def.split("-")[1]);
+    if (c.unseen) b.append(el("span", { class: "badge" }, "unseen"));
+    tabs.append(b);
+  });
+  await render();
+} catch (e) {
+  const banner = document.getElementById("err-banner");
+  banner.style.display = "block";
+  banner.textContent = "Failed to load the library or data: " + e.message;
+  throw e;
+}
+</script>
+
+</body>
+</html>

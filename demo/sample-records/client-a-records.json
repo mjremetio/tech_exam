@@ -1,0 +1,53 @@
+[
+  {
+    "_note": "Expected to be valid.",
+    "reporter_name": "Dana Levi",
+    "reporter_phone": "052-1234567",
+    "street_address": "14 Herzl Street",
+    "neighbourhood": "old_town",
+    "category": "pothole",
+    "description": "Large pothole in the middle of the road, roughly half a metre across. Two cars have already been damaged.",
+    "photo": "pothole-herzl.jpg",
+    "reported_at": "2026-03-11",
+    "callback_requested": true,
+    "estimated_cost": 4200
+  },
+  {
+    "_note": "Several problems, and several things that look like problems but are not.",
+    "reporter_name": "",
+    "reporter_phone": "054-9876543",
+    "street_address": "3 Bialik Street",
+    "neighbourhood": "north",
+    "category": "streetlight",
+    "description": "Dark",
+    "reported_at": "2026-03-12",
+    "callback_requested": false,
+    "estimated_cost": 0,
+    "operator_initials": "R.M."
+  },
+  {
+    "_note": "Type and value problems.",
+    "reporter_name": "Yossi Ben-Ami",
+    "reporter_phone": "03-5551234",
+    "street_address": "88 Rothschild Boulevard",
+    "neighbourhood": "downtown",
+    "category": "tree",
+    "description": "A large branch came down over the pavement during the storm last night and is blocking the entrance to the building.",
+    "photo": "branch.gif",
+    "reported_at": "11/03/2026",
+    "callback_requested": "yes",
+    "estimated_cost": "1500"
+  },
+  {
+    "_note": "Nulls and absences.",
+    "reporter_name": "Miriam Cohen",
+    "reporter_phone": null,
+    "street_address": "22 Weizmann Street",
+    "neighbourhood": "west",
+    "category": "waste",
+    "description": "The bins on this corner have not been emptied for over a week and there is a smell throughout the street.",
+    "photo": null,
+    "reported_at": "2026-03-13",
+    "callback_requested": null
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "client": "client-a",
+  "record_type": "maintenance_report",
+  "fields": [
+    {
+      "name": "reporter_name",
+      "label": "Reporter name",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 120 }
+    },
+    {
+      "name": "reporter_phone",
+      "label": "Contact phone",
+      "type": "phone",
+      "required": true
+    },
+    {
+      "name": "street_address",
+      "label": "Street address",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 200 }
+    },
+    {
+      "name": "neighbourhood",
+      "label": "Neighbourhood",
+      "type": "choice",
+      "required": true,
+      "options": ["north", "south", "east", "west", "old_town", "industrial"]
+    },
+    {
+      "name": "category",
+      "label": "Issue category",
+      "type": "choice",
+      "required": true,
+      "options": ["pothole", "streetlight", "waste", "tree", "signage", "other"]
+    },
+    {
+      "name": "description",
+      "label": "Description of the issue",
+      "type": "long_text",
+      "required": true,
+      "constraints": { "min_length": 10, "max_length": 2000 }
+    },
+    {
+      "name": "photo",
+      "label": "Photo",
+      "type": "file",
+      "required": false,
+      "constraints": { "accepted": ["jpg", "jpeg", "png", "heic"] }
+    },
+    {
+      "name": "reported_at",
+      "label": "Date reported",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "callback_requested",
+      "label": "Resident requested a callback",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "estimated_cost",
+      "label": "Estimated repair cost",
+      "type": "number",
+      "required": false,
+      "constraints": { "min": 0, "max": 1000000 },
+      "sensitivity": "internal"
+    }
+  ]
+}
