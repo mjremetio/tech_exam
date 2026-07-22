@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appendix — Onboarding a client: intake to configuration</title>
+<style>
+  :root {
+    --ink: #1a1f2b; --ink-soft: #4a5264; --ink-faint: #8a91a3;
+    --paper: #fbfaf7; --card: #ffffff; --accent: #2f5d8a; --accent-soft: #e8eff6;
+    --rule: #e4e2db; --ok: #2e7d4f; --ok-soft: #e9f5ee; --warn: #8a6d1f; --warn-soft: #faf3dd;
+    --mono: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  header { border-bottom: 1px solid var(--rule); background: var(--card); padding: 2.4rem 1.5rem 1.8rem; }
+  .inner { max-width: 46rem; margin: 0 auto; }
+  .back { font-size: 0.85rem; margin: 0 0 0.8rem; }
+  a { color: var(--accent); }
+  .kicker { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 0.6rem; }
+  h1 { font-size: 1.7rem; line-height: 1.2; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .lede { color: var(--ink-soft); margin: 0.4rem 0 0; }
+  main { padding: 2rem 1.5rem 5rem; }
+  h2 { font-size: 1.25rem; margin: 2.6rem 0 0.5rem; letter-spacing: -0.01em; }
+  h2 .n { color: var(--accent); font-weight: 700; margin-right: 0.4rem; }
+  h3 { font-size: 1rem; margin: 1.6rem 0 0.3rem; }
+  p { margin: 0.7rem 0; }
+  code { font-family: var(--mono); font-size: 0.85em; background: #f1efe9; border-radius: 4px; padding: 0.1em 0.35em; }
+  strong { font-weight: 600; }
+  .method { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 1.2rem 0 0; font-size: 0.9rem; }
+  .method .step { background: var(--accent-soft); color: var(--accent); font-weight: 600; border-radius: 999px; padding: 0.25rem 0.8rem; }
+  .method .arrow { color: var(--ink-faint); }
+  .method .esc { background: var(--warn-soft); color: var(--warn); }
+  table { border-collapse: collapse; width: 100%; margin: 0.8rem 0 1.4rem; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+  td.lands { color: var(--ink-soft); }
+  td.lands code { background: var(--accent-soft); color: var(--accent); }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1.2rem 0; }
+  .card.ok { border-color: #bfe0cc; background: var(--ok-soft); }
+  .card p:first-child { margin-top: 0; } .card p:last-child { margin-bottom: 0; }
+  .muted { color: var(--ink-faint); font-size: 0.9rem; }
+  ul { padding-left: 1.2rem; } li { margin: 0.35rem 0; }
+  footer { border-top: 1px solid var(--rule); padding: 1.6rem 1.5rem; color: var(--ink-faint); font-size: 0.86rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <p class="back"><a href="/">&larr; Back to the submission</a></p>
+    <p class="kicker">Appendix to Part A</p>
+    <h1>Onboarding a client: intake to configuration</h1>
+    <p class="lede">Part A, question 2 claims a fourth client is <em>authored, not coded</em>. That claim only holds if there is a disciplined way to turn "how this client works" into configuration — and a clear point where a requirement stops fitting and must escalate instead of becoming a fork. This is that process. It reuses the Part B definition format throughout, and the same <code>validateRecord</code> from Part B is the tool I use to check I understood the client before anyone builds.</p>
+    <div class="method">
+      <span class="step">Understand</span><span class="arrow">→</span>
+      <span class="step">Validate</span><span class="arrow">→</span>
+      <span class="step">Consolidate</span><span class="arrow">→</span>
+      <span class="step">Configure</span><span class="arrow">→</span>
+      <span class="step esc">Escalate (only if it doesn't fit)</span>
+    </div>
+  </div>
+</header>
+
+<main><div class="inner">
+
+  <p class="muted">This appendix is deliberately short. It exists to make one thing concrete — the operational side of "no per-client code" — not to lengthen the submission.</p>
+
+  <h2><span class="n">1</span>Intake — the questions, and where each answer lives</h2>
+  <p>Every question below is chosen because its answer has a home in the config model from Part A, question 3. If a client tells me something that has nowhere to go, that is the signal for section 3 — not a reason to open the code.</p>
+
+  <h3>Record types &amp; fields</h3>
+  <table>
+    <tr><th>What I ask</th><th>Where the answer lands</th></tr>
+    <tr><td>What kinds of thing do you track? (a report, an application, a referral…)</td><td class="lands">one <code>record_definition</code> per type</td></tr>
+    <tr><td>For each: what does one record record? Field by field — name, the label staff see, and is it text, a number, a date, a choice, a file?</td><td class="lands"><code>fields[]</code>: <code>name</code>, <code>label</code>, <code>type</code></td></tr>
+    <tr><td>Which fields must be filled to submit at all?</td><td class="lands"><code>required</code></td></tr>
+    <tr><td>For choices — what are the exact permitted values? For numbers/text — any limits, formats, or accepted file types?</td><td class="lands"><code>options</code>, <code>constraints</code></td></tr>
+    <tr><td>Which fields are sensitive — who should never see them?</td><td class="lands"><code>sensitivity</code> (enforced in §Roles)</td></tr>
+  </table>
+
+  <h3>Lifecycle &amp; who may move it</h3>
+  <table>
+    <tr><th>What I ask</th><th>Where the answer lands</th></tr>
+    <tr><td>What states does a record pass through, from arrival to done?</td><td class="lands"><code>workflows.statuses</code></td></tr>
+    <tr><td>Which moves are allowed — and which are not? (Can it skip a step? Go backwards?)</td><td class="lands"><code>workflows.transitions</code></td></tr>
+    <tr><td>For each move, who is allowed to make it?</td><td class="lands">transition → <code>role</code></td></tr>
+  </table>
+
+  <h3>Roles &amp; what each can see or do</h3>
+  <table>
+    <tr><th>What I ask</th><th>Where the answer lands</th></tr>
+    <tr><td>What named jobs touch this? (operator, department head, reviewer, reception, triage nurse…)</td><td class="lands"><code>roles</code>, per tenant</td></tr>
+    <tr><td>What can each create, read, and move?</td><td class="lands">role → record-type &amp; transition permissions</td></tr>
+    <tr><td>Is there a field a role must <em>not</em> read? (reception vs. clinical notes)</td><td class="lands">role → field-level read (paired with <code>sensitivity</code>)</td></tr>
+  </table>
+
+  <h3>Notifications, queues &amp; reporting</h3>
+  <table>
+    <tr><th>What I ask</th><th>Where the answer lands</th></tr>
+    <tr><td>When something changes, who gets told, how (SMS/email), with what wording — and is there a delay or a deadline?</td><td class="lands"><code>notification_rules</code> (trigger, template, channel, recipient, delay/timeout) + <code>templates</code></td></tr>
+    <tr><td>What does a staff member's daily work screen show — which filters, what sort order?</td><td class="lands"><code>views</code></td></tr>
+    <tr><td>What does a manager need counted, and over what period?</td><td class="lands">reporting queries over the same records</td></tr>
+  </table>
+
+  <h2><span class="n">2</span>Validate before building — the step people skip</h2>
+  <div class="card ok">
+    <p><strong>I do not trust a definition I have drafted until it survives the client's own history.</strong> The intake produces a draft <code>record_definition</code>. Before a line of product code is written, I take a sample of the client's <em>real past records</em> and run them through <code>validateRecord</code> against that draft — the exact library in Part B.</p>
+    <p>Records the client considers good must come back <code>valid: true</code>. Records their staff would have rejected must fail, <em>and</em> the message has to read correctly to those staff. Every mismatch means one of two things is wrong — my understanding, or the definition — and it is caught in a spreadsheet review with the client, not in production three weeks later.</p>
+  </div>
+  <p>This is why Part B returns structured, human-readable issues rather than a boolean: the validation output <em>is</em> the artefact I walk the client through to confirm we agree on what their data means. Consolidation is not a meeting; it is a passing test suite the client has signed off on.</p>
+
+  <h2><span class="n">3</span>The escalation boundary — where intake stops and honesty starts</h2>
+  <p>Some answers have nowhere to land. Intake's real job is to find these <em>early</em> and name them, rather than quietly bending the code to fit:</p>
+  <ul>
+    <li><strong>A rule between two fields</strong> ("project end must be after project start") — the format cannot express it today. Small declarative cross-field rules, added to the format for everyone. (Part B README.)</li>
+    <li><strong>A computed value</strong> — Client B's eligibility score calls an external API and runs a board-revised formula. That is a program, not configuration. It goes to the one named, versioned <em>computation extension point</em>, with its parameters kept in config. (Part A, question 8.)</li>
+    <li><strong>A rule that depends on the answer</strong> ("guardian required if patient is a minor") — the same class of gap; extend the vocabulary or decline, never special-case.</li>
+  </ul>
+  <p>The discipline: the boundary is crossed in the open, in a named place, for every client at once — never with an <code>if (tenant === …)</code>.</p>
+
+  <h2><span class="n">4</span>The data model it all writes to</h2>
+  <p>The intake above is, in effect, a form for populating these tables. This is the concrete shape behind Part A questions 3, 4 and 6 — relational skeleton, client-shaped record payloads in JSONB, every row scoped by <code>tenant_id</code> under row-level security.</p>
+  <table>
+    <tr><th>Table</th><th>Holds</th><th>Key columns</th></tr>
+    <tr><td><code>tenants</code></td><td>one row per client</td><td><code>id</code>, <code>name</code></td></tr>
+    <tr><td><code>users</code>, <code>roles</code></td><td>who logs in; named per-tenant roles and their permissions</td><td><code>tenant_id</code>, role → record/transition/field grants</td></tr>
+    <tr><td><code>record_definitions</code></td><td>the field definitions — versioned, <code>draft → published</code>, immutable once published</td><td><code>tenant_id</code>, <code>record_type</code>, <code>version</code>, <code>fields</code> (JSONB)</td></tr>
+    <tr><td><code>records</code></td><td>submitted records, as documents</td><td><code>tenant_id</code>, <code>definition_version_id</code>, <code>data</code> (JSONB), <code>status</code></td></tr>
+    <tr><td><code>workflows</code>, <code>transitions</code></td><td>statuses and the allowed moves, each naming a role</td><td><code>tenant_id</code>, from/to status, <code>role</code></td></tr>
+    <tr><td><code>notification_rules</code>, <code>templates</code></td><td>who is told, when, how, in what words</td><td><code>tenant_id</code>, trigger, channel, recipient, delay</td></tr>
+    <tr><td><code>views</code></td><td>the daily work screens: filters and sort</td><td><code>tenant_id</code>, filters, sort</td></tr>
+    <tr><td><code>audit_log</code></td><td>append-only: every record and config change, with actor</td><td><code>tenant_id</code>, actor, entity, before/after, at</td></tr>
+  </table>
+  <p class="muted">Why records are documents (JSONB) inside a relational skeleton, and why the whole thing sits behind row-level security rather than a database per tenant, is argued in Part A, questions 4 and 6. This appendix shows only how a client conversation fills it.</p>
+
+</div></main>
+
+<footer>
+  <div class="inner">Mark Joseph Remetio · Appendix to the Platform Foundation submission · <a href="/">back to the main page</a></div>
+</footer>
+
+</body>
+</html>
