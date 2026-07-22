@@ -193,19 +193,18 @@
     <p><strong>Languages.</strong> TypeScript everywhere: backend, frontend, and the shared definition/validation library. That follows directly from the architecture: validation driven by definitions should run <em>identically</em> in the browser (instant field feedback) and on the server (the actual gate), and one language means it is literally the same code, not two implementations drifting apart. SQL is the second language, written deliberately for reports and the queue paths.</p>
     <p><strong>Backend & frontend.</strong> Node.js with <strong>Fastify</strong>, a thin and fast HTTP layer; this system's complexity belongs in the domain model, not the framework. Frontend: <strong>React + Vite</strong>, rendering forms and queue screens generically from the Part B form descriptions and the stored view configs. No per-client frontend code.</p>
     <p><strong>Database.</strong> <strong>PostgreSQL</strong>, one database doing double duty: relational tables for the parts that are genuinely relational (tenants, users, roles, workflows, transitions, audit log, notification rules) and JSONB for the client-shaped record payloads. This problem is the case JSONB-in-Postgres exists for: per-client variable shapes <em>inside</em> a fixed relational skeleton, with row-level security, real transactions (a status change + audit row + outbound notification enqueue must commit atomically), and SQL aggregation for every client's reporting needs.</p>
-    <p><strong>Third-party services.</strong> Buy the undifferentiated parts:</p>
+    <p><strong>Third-party services.</strong> For a small team running one platform, the goal is the least infrastructure to operate — so a few managed services, not assembled cloud primitives:</p>
     <table>
-      <tr><th>Concern</th><th>Choice</th><th>Note</th></tr>
-      <tr><td>Hosting</td><td>AWS — ECS Fargate + RDS Postgres</td><td>Boring, well-understood, region-selectable for the privacy question</td></tr>
-      <tr><td>Authentication</td><td>Auth0</td><td>Per-tenant organisations, MFA, session management — never hand-roll auth for a system holding medical referrals</td></tr>
-      <tr><td>File storage</td><td>S3</td><td>Per-tenant prefixes, signed URLs, lifecycle rules</td></tr>
-      <tr><td>Email</td><td>Postmark</td><td>Transactional focus, delivery visibility per message</td></tr>
-      <tr><td>SMS</td><td>Twilio</td><td>Client A's resident notifications; supports Israeli numbers</td></tr>
-      <tr><td>Jobs & queues</td><td>BullMQ on Redis (ElastiCache)</td><td>Notification sending, the 14-day delayed email, the 4-hour triage timeout, registry-API score fetches</td></tr>
-      <tr><td>Caching</td><td>The same Redis</td><td>Config cache with publish invalidation</td></tr>
-      <tr><td>Monitoring</td><td>Sentry + Grafana Cloud</td><td>Errors with tenant context; metrics per tenant so one client's storm is visible as one client's storm</td></tr>
+      <tr><th>Concern</th><th>Choice</th><th>Why</th></tr>
+      <tr><td>Hosting & database</td><td>Render</td><td>Managed containers + managed Postgres in one place; EU region covers Client C's residency</td></tr>
+      <tr><td>Auth</td><td>Clerk</td><td>Multi-tenant orgs, MFA, sessions — not hand-rolled</td></tr>
+      <tr><td>File storage</td><td>Cloudflare R2</td><td>Per-tenant prefixes, signed URLs</td></tr>
+      <tr><td>Email</td><td>Resend</td><td>Transactional, per-message delivery status</td></tr>
+      <tr><td>SMS</td><td>Twilio</td><td>Client A's resident texts; Israeli numbers</td></tr>
+      <tr><td>Jobs, queues & cache</td><td>Upstash Redis + BullMQ</td><td>Delayed emails, the 4-hour triage timeout, config cache</td></tr>
+      <tr><td>Monitoring</td><td>Sentry</td><td>Errors + performance, tagged per tenant</td></tr>
     </table>
-    <p><strong>Hard to reverse:</strong> the definition format itself (every stored record embeds its assumptions; this is the choice to get right), Postgres-with-RLS as the tenancy model, and TypeScript-everywhere. <strong>Easy to swap:</strong> Postmark, Twilio, Sentry, Grafana (all behind thin adapters; email and SMS senders are interfaces from day one), hosting (nothing AWS-specific above the infrastructure layer), even Fastify at moderate cost. Auth0 sits in the middle: swappable in principle, tedious in practice, which is why sessions and roles stay in our model with Auth0 only proving identity.</p>
+    <p><strong>Hard to reverse:</strong> the definition format itself (every stored record embeds its assumptions; this is the choice to get right), Postgres-with-RLS as the tenancy model, and TypeScript-everywhere. <strong>Easy to swap:</strong> Resend, Twilio, Sentry, R2 (all behind thin adapters; email and SMS senders are interfaces from day one), and the host itself (nothing Render-specific above the container). Clerk sits in the middle: swappable in principle, tedious in practice, which is why sessions and roles stay in our model with Clerk only proving identity.</p>
     <p><strong>The alternative I took seriously:</strong> MongoDB for the record store — documents with per-client shapes are its home ground, and half this design looks like a document problem. I rejected it because the decisive requirements are the ones <em>around</em> the documents: row-level security as a database-enforced tenancy guarantee, atomic transactions across records + audit + workflow state, and ad-hoc SQL aggregation for every client's reports. Postgres JSONB gives me roughly ninety percent of Mongo's flexibility while keeping all three; Mongo would give me ideal document ergonomics and make me rebuild isolation, transactional discipline, and reporting myself. I also simply know Postgres's failure modes better, and per the brief that counts, so I'm counting it.</p>
   </div>
 
