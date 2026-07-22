@@ -78,6 +78,16 @@
   .empty { color: var(--ink-faint); font-size: 0.9rem; font-style: italic; }
   .banner { background: var(--err-soft); color: var(--err); border: 1px solid var(--err);
     border-radius: 8px; padding: 1rem; margin: 1rem 0; display: none; }
+  .guide { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 0 0 1.6rem; }
+  @media (max-width: 760px) { .guide { grid-template-columns: 1fr; } }
+  .guide .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.2rem; }
+  .guide h2 { margin: 0 0 0.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+  .guide ol { margin: 0; padding-left: 1.2rem; font-size: 0.9rem; }
+  .guide ol li { margin: 0.35rem 0; }
+  .guide p { margin: 0 0 0.5rem; font-size: 0.9rem; }
+  .guide ul.why { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; color: var(--ink-soft); }
+  .guide ul.why li { margin: 0.3rem 0; }
+  .guide code.inline { font-family: var(--mono); font-size: 0.82em; background: #f1efe9; border-radius: 4px; padding: 0.05em 0.3em; }
 </style>
 </head>
 <body>
@@ -94,6 +104,28 @@
 
 <main><div class="inner">
   <div class="banner" id="err-banner"></div>
+
+  <div class="guide">
+    <div class="panel">
+      <h2>How to use it</h2>
+      <ol>
+        <li>Pick a <strong>client tab</strong> above (client-a … client-d).</li>
+        <li>The form on the left is generated from <code class="inline">describeForm</code>'s output. Fill it in and press <strong>Validate</strong> to run the real <code class="inline">validateRecord</code> — errors highlight on the offending fields, and the full result JSON is under "record sent + full result".</li>
+        <li>The right column shows every starter <strong>sample record</strong> validated live. Open "describeForm output" to see the exact data structure the form was built from.</li>
+        <li>Try to break it: type <code class="inline">1500</code> into a number field as text, use a real-looking date like <code class="inline">31/01/2026</code>, over-select a multi-choice, or submit the form empty.</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h2>Why this demo is here</h2>
+      <p>The Part B deliverable is a <strong>library that returns data structures</strong> — the brief says explicitly, "do not build a user interface." So this page is a thin wrapper around the unchanged library, not the deliverable. It exists to show three things source code alone can't:</p>
+      <ul class="why">
+        <li><strong>It runs.</strong> Real input, real output, right now — not just tests I'm asking you to trust.</li>
+        <li><strong>"No client-specific code" is true.</strong> The <strong>client-d</strong> tab is a definition the library has never seen; the same two functions render and validate it with zero code changes — the exact check the brief runs after submission.</li>
+        <li><strong>The data structure is enough.</strong> The form is built only from <code class="inline">describeForm</code>'s output, proving the returned structure can drive a real renderer. The library itself renders nothing; this page does, exactly as a production frontend would.</li>
+      </ul>
+    </div>
+  </div>
+
   <div id="app"></div>
 </div></main>
 

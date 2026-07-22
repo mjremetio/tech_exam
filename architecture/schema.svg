@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 570" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <style>
+    .bg{fill:#fbfaf7}
+    .box{fill:#ffffff;stroke:#e4e2db;stroke-width:1}
+    .hdr{fill:#2f5d8a}
+    .tname{fill:#ffffff;font-size:12.5px;font-weight:600}
+    .col{fill:#1a1f2b;font-size:11px}
+    .key{fill:#8a91a3;font-size:9px}
+    .rel{stroke:#2f5d8a;stroke-width:1.5;fill:none}
+    .rellbl{fill:#4a5264;font-size:9.5px;font-style:italic}
+    .card{fill:#2f5d8a;font-size:11px;font-weight:700}
+    .title{fill:#1a1f2b;font-size:17px;font-weight:700}
+    .sub{fill:#4a5264;font-size:11.5px}
+    .legend{fill:#4a5264;font-size:10.5px}
+    .dot{fill:#2f5d8a}
+  </style>
+
+  <rect class="bg" x="0" y="0" width="980" height="570"/>
+  <text class="title" x="30" y="30">Platform data model — shared-schema, multi-tenant</text>
+  <text class="sub" x="30" y="50">Every table carries <tspan font-weight="700">tenant_id</tspan> (FK → tenants). Row-Level Security makes other tenants' rows invisible: the isolation guarantee (Part A, Q4).</text>
+
+  <!-- ===================== relationship lines (drawn first, under boxes) ===================== -->
+  <!-- tenants -> record_definitions -->
+  <path class="rel" d="M250,110 H315 V126 H380"/>
+  <circle class="dot" cx="250" cy="110" r="2.5"/>
+  <text class="card" x="360" y="122">*</text>
+  <!-- tenants -> users -->
+  <path class="rel" d="M145,146 V174"/>
+  <circle class="dot" cx="145" cy="146" r="2.5"/>
+  <text class="card" x="150" y="170">*</text>
+  <!-- record_definitions -> records (definition_id) -->
+  <path class="rel" d="M485,178 V236"/>
+  <circle class="dot" cx="485" cy="178" r="2.5"/>
+  <text class="card" x="490" y="232">*</text>
+  <text class="rellbl" x="492" y="212">definition_id</text>
+  <!-- workflows -> transitions (workflow_id) -->
+  <path class="rel" d="M825,162 V202"/>
+  <circle class="dot" cx="825" cy="162" r="2.5"/>
+  <text class="card" x="830" y="200">*</text>
+  <text class="rellbl" x="832" y="185">workflow_id</text>
+  <!-- notification_rules -> templates (template_id) -->
+  <path class="rel" d="M720,374 H650 V438 H592"/>
+  <circle class="dot" cx="720" cy="374" r="2.5"/>
+  <text class="card" x="600" y="434">1</text>
+  <text class="rellbl" x="628" y="404">template_id</text>
+
+  <!-- ===================== column A: tenants / users / roles / audit_log ===================== -->
+  <!-- tenants -->
+  <rect class="box" x="40" y="74" width="210" height="70"/>
+  <rect class="hdr" x="40" y="74" width="210" height="24"/>
+  <text class="tname" x="52" y="90">tenants</text>
+  <text class="col" x="52" y="115">id <tspan class="key">PK · uuid</tspan></text>
+  <text class="col" x="52" y="132">slug · name</text>
+
+  <!-- users -->
+  <rect class="box" x="40" y="174" width="210" height="70"/>
+  <rect class="hdr" x="40" y="174" width="210" height="24"/>
+  <text class="tname" x="52" y="190">users</text>
+  <text class="col" x="52" y="215">tenant_id <tspan class="key">FK</tspan> · email</text>
+  <text class="col" x="52" y="232">external_id <tspan class="key">(Clerk)</tspan></text>
+
+  <!-- roles -->
+  <rect class="box" x="40" y="274" width="210" height="86"/>
+  <rect class="hdr" x="40" y="274" width="210" height="24"/>
+  <text class="tname" x="52" y="290">roles</text>
+  <text class="col" x="52" y="315">tenant_id <tspan class="key">FK</tspan> · name</text>
+  <text class="col" x="52" y="332">grants <tspan class="key">jsonb</tspan></text>
+  <text class="key" x="52" y="349">record / transition / field grants</text>
+
+  <!-- audit_log -->
+  <rect class="box" x="40" y="390" width="210" height="86"/>
+  <rect class="hdr" x="40" y="390" width="210" height="24"/>
+  <text class="tname" x="52" y="406">audit_log <tspan class="key" fill="#cfe0f0">append-only</tspan></text>
+  <text class="col" x="52" y="431">tenant_id <tspan class="key">FK</tspan> · actor_id</text>
+  <text class="col" x="52" y="448">entity · action</text>
+  <text class="col" x="52" y="465">before / after <tspan class="key">jsonb</tspan></text>
+
+  <!-- ===================== column B: record_definitions / records / templates ===================== -->
+  <!-- record_definitions -->
+  <rect class="box" x="380" y="74" width="210" height="104"/>
+  <rect class="hdr" x="380" y="74" width="210" height="24"/>
+  <text class="tname" x="392" y="90">record_definitions <tspan class="key" fill="#cfe0f0">versioned</tspan></text>
+  <text class="col" x="392" y="115">id <tspan class="key">PK</tspan> · tenant_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="392" y="132">record_type · version</text>
+  <text class="col" x="392" y="149">status <tspan class="key">draft→published</tspan></text>
+  <text class="col" x="392" y="166">fields <tspan class="key">jsonb — the Part B format</tspan></text>
+
+  <!-- records -->
+  <rect class="box" x="380" y="236" width="210" height="104"/>
+  <rect class="hdr" x="380" y="236" width="210" height="24"/>
+  <text class="tname" x="392" y="252">records</text>
+  <text class="col" x="392" y="277">id <tspan class="key">PK</tspan> · tenant_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="392" y="294">definition_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="392" y="311">status</text>
+  <text class="col" x="392" y="328">data <tspan class="key">jsonb — validated payload</tspan></text>
+
+  <!-- templates -->
+  <rect class="box" x="380" y="392" width="210" height="88"/>
+  <rect class="hdr" x="380" y="392" width="210" height="24"/>
+  <text class="tname" x="392" y="408">templates</text>
+  <text class="col" x="392" y="433">id <tspan class="key">PK</tspan> · tenant_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="392" y="450">name · channel</text>
+  <text class="col" x="392" y="467">body <tspan class="key">placeholders</tspan></text>
+
+  <!-- ===================== column C: workflows / transitions / notification_rules / views ===================== -->
+  <!-- workflows -->
+  <rect class="box" x="720" y="74" width="210" height="88"/>
+  <rect class="hdr" x="720" y="74" width="210" height="24"/>
+  <text class="tname" x="732" y="90">workflows</text>
+  <text class="col" x="732" y="115">id <tspan class="key">PK</tspan> · tenant_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="732" y="132">record_type</text>
+  <text class="col" x="732" y="149">statuses <tspan class="key">jsonb</tspan></text>
+
+  <!-- transitions -->
+  <rect class="box" x="720" y="202" width="210" height="86"/>
+  <rect class="hdr" x="720" y="202" width="210" height="24"/>
+  <text class="tname" x="732" y="218">transitions</text>
+  <text class="col" x="732" y="243">workflow_id <tspan class="key">FK</tspan></text>
+  <text class="col" x="732" y="260">from_status → to_status</text>
+  <text class="col" x="732" y="277">role <tspan class="key">who may move it</tspan></text>
+
+  <!-- notification_rules -->
+  <rect class="box" x="720" y="320" width="210" height="104"/>
+  <rect class="hdr" x="720" y="320" width="210" height="24"/>
+  <text class="tname" x="732" y="336">notification_rules</text>
+  <text class="col" x="732" y="361">tenant_id <tspan class="key">FK</tspan> · channel</text>
+  <text class="col" x="732" y="378">trigger <tspan class="key">status_enter | timeout</tspan></text>
+  <text class="col" x="732" y="395">recipient</text>
+  <text class="col" x="732" y="412">delay <tspan class="key">interval — e.g. 14 days</tspan></text>
+
+  <!-- views -->
+  <rect class="box" x="720" y="452" width="210" height="70"/>
+  <rect class="hdr" x="720" y="452" width="210" height="24"/>
+  <text class="tname" x="732" y="468">views <tspan class="key" fill="#cfe0f0">queue screens</tspan></text>
+  <text class="col" x="732" y="493">tenant_id <tspan class="key">FK</tspan> · filters</text>
+  <text class="col" x="732" y="510">sort <tspan class="key">jsonb</tspan></text>
+
+  <!-- ===================== legend ===================== -->
+  <line class="rel" x1="42" y1="512" x2="72" y2="512"/>
+  <circle class="dot" cx="42" cy="512" r="2.5"/>
+  <text class="card" x="66" y="516">*</text>
+  <text class="legend" x="82" y="516">foreign key (one → many)</text>
+  <text class="legend" x="82" y="533"><tspan font-weight="700">jsonb</tspan> = client-shaped data; everything else is the fixed relational skeleton.</text>
+</svg>

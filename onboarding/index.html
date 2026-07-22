@@ -124,6 +124,10 @@
 
   <h2><span class="n">4</span>The data model it all writes to</h2>
   <p>The intake above is, in effect, a form for populating these tables. This is the concrete shape behind Part A questions 3, 4 and 6 — relational skeleton, client-shaped record payloads in JSONB, every row scoped by <code>tenant_id</code> under row-level security.</p>
+  <figure style="margin:1.2rem 0;">
+    <img src="/architecture/schema.svg" alt="Entity-relationship diagram of the platform data model: tenants as the isolation boundary, versioned record_definitions stamping the records store, and the config tables (workflows, transitions, roles, notification_rules, templates, views, audit_log), every table scoped by tenant_id under row-level security." style="width:100%;height:auto;border:1px solid var(--rule);border-radius:10px;background:#fbfaf7;" />
+    <figcaption class="muted" style="margin-top:0.4rem;">The data model as an ER diagram (<a href="/architecture/schema.svg">open the SVG</a>). The three <code>jsonb</code> columns are where a client's shape lives; everything else is the same for every client.</figcaption>
+  </figure>
   <table>
     <tr><th>Table</th><th>Holds</th><th>Key columns</th></tr>
     <tr><td><code>tenants</code></td><td>one row per client</td><td><code>id</code>, <code>name</code></td></tr>
