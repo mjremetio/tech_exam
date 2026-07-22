@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Foundation — Take-Home Submission · Mark Joseph Remetio</title>
+<style>
+  :root {
+    --ink: #1a1f2b;
+    --ink-soft: #4a5264;
+    --ink-faint: #8a91a3;
+    --paper: #fbfaf7;
+    --card: #ffffff;
+    --accent: #2f5d8a;
+    --accent-soft: #e8eff6;
+    --rule: #e4e2db;
+    --mono: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    background: var(--card);
+    padding: 3.5rem 1.5rem 2.5rem;
+  }
+  .masthead-inner, main, footer .footer-inner { max-width: 44rem; margin: 0 auto; }
+  .kicker {
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin: 0 0 0.75rem;
+  }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .byline { color: var(--ink-soft); margin: 0; }
+  nav.toc {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(251,250,247,0.95); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.6rem 1.5rem;
+  }
+  nav.toc .toc-inner { max-width: 44rem; margin: 0 auto; display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  nav.toc a { color: var(--ink-soft); text-decoration: none; font-size: 0.86rem; font-weight: 500; }
+  nav.toc a:hover { color: var(--accent); }
+  main { padding: 2.5rem 1.5rem 5rem; }
+  section { margin-bottom: 3.5rem; }
+  h2 {
+    font-size: 1.45rem; margin: 3rem 0 0.5rem; letter-spacing: -0.01em;
+    padding-top: 1rem;
+  }
+  h2 .sec-num { color: var(--accent); font-weight: 700; margin-right: 0.4rem; }
+  h3 { font-size: 1.08rem; margin: 2.2rem 0 0.4rem; }
+  h3 .q-num {
+    display: inline-block; background: var(--accent-soft); color: var(--accent);
+    font-size: 0.82rem; font-weight: 700; border-radius: 4px;
+    padding: 0.1rem 0.5rem; margin-right: 0.5rem; vertical-align: 2px;
+  }
+  p, li { color: var(--ink); }
+  p { margin: 0.7rem 0; }
+  a { color: var(--accent); }
+  strong { font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 0.85em;
+    background: #f1efe9; border-radius: 4px; padding: 0.1em 0.35em;
+  }
+  pre {
+    background: #232733; color: #e8eaf0; border-radius: 8px;
+    padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.82rem; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
+  .qa { border-left: 3px solid var(--rule); padding-left: 1.2rem; margin: 1.5rem 0 2.5rem; }
+  .assumption { color: var(--ink-soft); }
+  .assumption strong { color: var(--ink); }
+  .card {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin: 1.5rem 0;
+  }
+  .card p:first-child { margin-top: 0; }
+  .card p:last-child { margin-bottom: 0; }
+  .muted { color: var(--ink-faint); font-size: 0.9rem; }
+  ul { padding-left: 1.3rem; }
+  li { margin: 0.45rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+  footer { border-top: 1px solid var(--rule); padding: 2rem 1.5rem; color: var(--ink-faint); font-size: 0.88rem; }
+  @media (max-width: 640px) { body { font-size: 16px; } h1 { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="kicker">Take-Home Exercise · Platform Foundation</p>
+    <h1>One platform, many clients, no forks</h1>
+    <p class="byline">Mark Joseph Remetio · Software Developer candidate · July 2026</p>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#part-a">Part A — Architecture note</a>
+    <a href="#part-b">Part B — Code</a>
+    <a href="#part-c">Part C — Reflection</a>
+    <a href="#ai">How I used AI</a>
+  </div>
+</nav>
+
+<main>
+
+<section id="part-a">
+  <h2><span class="sec-num">Part A</span>Architecture note</h2>
+
+  <h3><span class="q-num">1</span>Questions I would ask before building</h3>
+  <div class="qa">
+    <p><strong>Who makes configuration changes once we're live — our staff, or the clients themselves?</strong> The whole brief turns on "constant small changes"; whether a renamed status is a support ticket to us or a self-service edit by the client changes what the admin tooling must be.<br>
+    <span class="assumption"><strong>Assumption:</strong> our staff, through an internal admin interface, for at least the first year. Client self-service is a later product decision, not a foundation requirement, but the config model must not preclude it.</span></p>
+
+    <p><strong>What happens to the three existing systems and their data?</strong> Migrating years of resident history and grant records is a project of its own, and Client A's "show me this resident's history" only works if the history comes across.<br>
+    <span class="assumption"><strong>Assumption:</strong> we migrate active records and enough history to serve the features that need it; the old systems stay readable but frozen until decommissioned.</span></p>
+
+    <p><strong>Where must the data physically live, and who is the legal data controller?</strong> Client C is under Israeli privacy law and expects an audit; that may constrain hosting region, retention, and deletion obligations for everyone sharing the platform.<br>
+    <span class="assumption"><strong>Assumption:</strong> each client is the controller and we are the processor; a single hosting region acceptable to all three (an Israeli or EU region) is workable, and I would confirm the specifics with a lawyer rather than guess. The design keeps per-client data export and deletion cheap either way.</span></p>
+
+    <p><strong>What are the availability and urgency expectations, concretely?</strong> "Duty nurse is alerted within four hours" implies someone is watching alerts at night. Is this platform life-safety-adjacent, or business-hours software with one time-sensitive rule?<br>
+    <span class="assumption"><strong>Assumption:</strong> business-hours criticality with one hard timing rule (the four-hour triage alert), which gets a monitored, redundant delivery path — not a platform-wide 24/7 SLA.</span></p>
+
+    <p><strong>How exact does Client A's resident matching need to be?</strong> Same person, different phone numbers, misspelled names: that is identity resolution, and fully automatic merging of people's records is both hard and risky.<br>
+    <span class="assumption"><strong>Assumption:</strong> the system <em>suggests</em> likely matches and staff confirm them. It never merges records on its own.</span></p>
+
+    <p><strong>Must past eligibility scores be reproducible after the board changes the formula?</strong> If a rejected applicant challenges a decision a year later, can we show the score, the formula version, and the inputs that produced it?<br>
+    <span class="assumption"><strong>Assumption:</strong> yes. Formulas and per-round weights are versioned, and every stored score records which version produced it from which inputs.</span></p>
+
+    <p><strong>What is the billing model?</strong> Flat per-client subscription versus usage-based pricing changes how much per-tenant metering the foundation needs from day one.<br>
+    <span class="assumption"><strong>Assumption:</strong> flat subscription; no metering in the foundation.</span></p>
+  </div>
+
+  <h3><span class="q-num">2</span>How would you model "a client's data shape"?</h3>
+  <div class="qa">
+    <p>A client's data shape is <strong>data, not code</strong>. Each client has one or more <em>record types</em> (maintenance report, grant application, patient referral), and each record type is described by a <em>definition</em>: an ordered list of fields with a name, label, type from a fixed vocabulary (<code>text</code>, <code>number</code>, <code>date</code>, <code>choice</code>, <code>file</code>…), a required flag, options, constraints, and a sensitivity level. This is exactly the format in the starter package, and Part B is the working proof: one validator and one form-describer, driven entirely by definitions, handling three very different clients with zero client-specific code.</p>
+    <p>Submitted records are stored as documents (JSONB in Postgres) alongside the id of the definition <em>version</em> they were validated against. Definitions are versioned and immutable once published, so old records keep meaning what they meant when they were submitted; that matters to a clinic facing an audit.</p>
+    <p>For onboarding client four to require no new code, three things have to be true:</p>
+    <ul>
+      <li><strong>Nothing downstream names a field.</strong> Validation, form rendering, list screens, filters, exports and reports all read the definition at runtime. If any screen hard-codes "neighbourhood", the game is lost.</li>
+      <li><strong>The field-type vocabulary is closed and generic.</strong> New clients combine existing types; they do not get new ones. Adding a type is a platform change that benefits everyone at once.</li>
+      <li><strong>Everything else a client varies — statuses, roles, notifications, queues — is configuration in the same spirit</strong> (question 3), so "onboard a client" means "author configuration", a task for a person with an admin screen, not a programmer with a branch.</li>
+    </ul>
+  </div>
+
+  <h3><span class="q-num">3</span>Where do client differences live?</h3>
+  <div class="qa">
+    <p>In a set of versioned configuration tables in the platform database, scoped by tenant, read at runtime, and cached. Concretely, per tenant:</p>
+    <ul>
+      <li><code>record_definitions</code> — the field definitions above, as versioned JSONB rows with <code>draft → published</code> states.</li>
+      <li><code>workflows</code> — the status list and the allowed transitions, each transition naming which <em>roles</em> may perform it. Client A's "only a department head may assign" and Client C's "only a triage nurse may set urgency" are rows here, not code.</li>
+      <li><code>roles</code> — named per tenant, mapping to permissions over record types, transitions, and <em>fields</em> (reception's inability to read clinical notes is a field-level read permission).</li>
+      <li><code>notification_rules</code> — "on entering status X, send template Y over channel Z to recipient R, with optional delay". Client B's "second email fourteen days later" is a rule with <code>delay: 14 days</code>; the four-hour triage alert is the same shape with a timeout trigger.</li>
+      <li><code>views</code> — the queue screens: which filters, which sort. "Urgency then arrival time, filtered by specialty" is a stored view description the frontend renders generically.</li>
+      <li><code>templates</code> — email/SMS wording with placeholders resolved from record fields.</li>
+    </ul>
+    <p>The mechanism: services read config through one config module that caches per <code>(tenant, config-kind)</code> and invalidates on publish. Publishing a config change is an audited event. Under constant small change requests, <em>the configuration is the product</em>, and "who changed the email wording and when" must be answerable.</p>
+  </div>
+
+  <h3><span class="q-num">4</span>Keeping clients apart</h3>
+  <div class="qa">
+    <p>Single database, shared schema, <code>tenant_id</code> on every row — enforced by <strong>Postgres Row-Level Security</strong>. Every connection sets the tenant context from the authenticated session before any query runs, and RLS policies make other tenants' rows <em>invisible</em> to every query. The guarantee lives in the database, beneath the application: a developer who forgets a <code>WHERE tenant_id =</code> clause gets an empty result, not a breach.</p>
+    <p>Layers above repeat the guarantee rather than relying on it:</p>
+    <ul>
+      <li>The tenant id comes only from the server-side session established at login — never from a request parameter, header, or URL a client could influence.</li>
+      <li>The application's data-access layer scopes every query by tenant anyway; RLS is the net under it, not the only wall.</li>
+      <li>Files live in per-tenant prefixes in object storage, reachable only through short-lived signed URLs minted by the backend after the same permission checks.</li>
+      <li>An automated test suite logs in as tenant A and attempts every read against tenant C's known data, and fails the build on anything but empty results.</li>
+    </ul>
+    <p>Field-level sensitivity is part of the same enforcement point: the API strips fields the caller's role may not read (clinical notes, for reception) <em>at the server</em>, so the data never reaches a browser that shouldn't hold it. Hiding fields client-side would only be cosmetic.</p>
+  </div>
+
+  <h3><span class="q-num">5</span>What breaks first at 300 clients?</h3>
+  <div class="qa">
+    <p><strong>The queue screens' queries against the shared JSONB record store.</strong> Every client's staff works all day from a filtered, sorted list (the single hottest path in the product), and the filters are client-defined at runtime, so they hit JSONB paths the database has no indexes for. At three tenants a sequential scan over a few hundred thousand rows is invisible. At 300 tenants, with a few Client-A-sized tenants at 200+ records a day, storm bursts of 4,000, and years of accumulation, those scans are the first thing users feel, and because the store is shared, one heavy tenant degrades everyone's queues at once. It fails first because it combines the highest query frequency, the least statically-known shape, and the shared blast radius.</p>
+    <p>What I would do, in order: when a definition is published, <strong>generate indexes from the config</strong>: the definition already declares which fields are filterable and sortable, so create Postgres expression indexes (or generated columns) on those JSONB paths per tenant's record type, and partial indexes on open statuses since queues only show open items. That is the config-driven philosophy applied to the physical layer, and it is cheap. After that: read replicas for queue reads, and, once a tenant outgrows shared hardware, moving that tenant's partition to its own node, which the tenant-scoped model allows without redesign.</p>
+    <p class="muted">Runner-up: at 300 clients × constant small changes, the humans processing config requests break before the hardware does. The mitigation is the same config model exposed as client self-service — which is why question 1's first assumption matters.</p>
+  </div>
+
+  <h3><span class="q-num">6</span>Technology choices</h3>
+  <div class="qa">
+    <p><strong>Languages.</strong> TypeScript everywhere: backend, frontend, and the shared definition/validation library. That follows directly from the architecture: validation driven by definitions should run <em>identically</em> in the browser (instant field feedback) and on the server (the actual gate), and one language means it is literally the same code, not two implementations drifting apart. SQL is the second language, written deliberately for reports and the queue paths.</p>
+    <p><strong>Backend & frontend.</strong> Node.js with <strong>Fastify</strong>, a thin and fast HTTP layer; this system's complexity belongs in the domain model, not the framework. Frontend: <strong>React + Vite</strong>, rendering forms and queue screens generically from the Part B form descriptions and the stored view configs. No per-client frontend code.</p>
+    <p><strong>Database.</strong> <strong>PostgreSQL</strong>, one database doing double duty: relational tables for the parts that are genuinely relational (tenants, users, roles, workflows, transitions, audit log, notification rules) and JSONB for the client-shaped record payloads. This problem is the case JSONB-in-Postgres exists for: per-client variable shapes <em>inside</em> a fixed relational skeleton, with row-level security, real transactions (a status change + audit row + outbound notification enqueue must commit atomically), and SQL aggregation for every client's reporting needs.</p>
+    <p><strong>Third-party services.</strong> Buy the undifferentiated parts:</p>
+    <table>
+      <tr><th>Concern</th><th>Choice</th><th>Note</th></tr>
+      <tr><td>Hosting</td><td>AWS — ECS Fargate + RDS Postgres</td><td>Boring, well-understood, region-selectable for the privacy question</td></tr>
+      <tr><td>Authentication</td><td>Auth0</td><td>Per-tenant organisations, MFA, session management — never hand-roll auth for a system holding medical referrals</td></tr>
+      <tr><td>File storage</td><td>S3</td><td>Per-tenant prefixes, signed URLs, lifecycle rules</td></tr>
+      <tr><td>Email</td><td>Postmark</td><td>Transactional focus, delivery visibility per message</td></tr>
+      <tr><td>SMS</td><td>Twilio</td><td>Client A's resident notifications; supports Israeli numbers</td></tr>
+      <tr><td>Jobs & queues</td><td>BullMQ on Redis (ElastiCache)</td><td>Notification sending, the 14-day delayed email, the 4-hour triage timeout, registry-API score fetches</td></tr>
+      <tr><td>Caching</td><td>The same Redis</td><td>Config cache with publish invalidation</td></tr>
+      <tr><td>Monitoring</td><td>Sentry + Grafana Cloud</td><td>Errors with tenant context; metrics per tenant so one client's storm is visible as one client's storm</td></tr>
+    </table>
+    <p><strong>Hard to reverse:</strong> the definition format itself (every stored record embeds its assumptions; this is the choice to get right), Postgres-with-RLS as the tenancy model, and TypeScript-everywhere. <strong>Easy to swap:</strong> Postmark, Twilio, Sentry, Grafana (all behind thin adapters; email and SMS senders are interfaces from day one), hosting (nothing AWS-specific above the infrastructure layer), even Fastify at moderate cost. Auth0 sits in the middle: swappable in principle, tedious in practice, which is why sessions and roles stay in our model with Auth0 only proving identity.</p>
+    <p><strong>The alternative I took seriously:</strong> MongoDB for the record store — documents with per-client shapes are its home ground, and half this design looks like a document problem. I rejected it because the decisive requirements are the ones <em>around</em> the documents: row-level security as a database-enforced tenancy guarantee, atomic transactions across records + audit + workflow state, and ad-hoc SQL aggregation for every client's reports. Postgres JSONB gives me roughly ninety percent of Mongo's flexibility while keeping all three; Mongo would give me ideal document ergonomics and make me rebuild isolation, transactional discipline, and reporting myself. I also simply know Postgres's failure modes better, and per the brief that counts, so I'm counting it.</p>
+  </div>
+
+  <h3><span class="q-num">7</span>Five principles for the development itself</h3>
+  <div class="qa">
+    <p><strong>1. Client differences are configuration; if satisfying a change request requires a deploy, the platform has a bug.</strong> This is the direct answer to "constant small change requests". It settles arguments: when a developer proposes handling a client ask with a quick conditional, the principle says the correct fix is config, or extending what config can express.</p>
+    <p><strong>2. No code may name a client.</strong> No <code>if (tenant === "clinic")</code>, ever, enforced in review and greppable in CI. The moment one branch exists, the second is easier, and the platform starts becoming three systems in one repository again, which is the disease we're escaping. Part B is this principle in miniature.</p>
+    <p><strong>3. When config can't express a client's need, extend the vocabulary for everyone or decline — never special-case.</strong> The hardest moments will be requests that <em>almost</em> fit. This principle forces the honest question "is this feature general?" and gives a legitimate answer of "no, and therefore we won't" — which principle 1 alone doesn't.</p>
+    <p><strong>4. Authorisation happens server-side, at field granularity, or it hasn't happened.</strong> Reception must not see clinical notes; a role that "can do most of what another can but not all" is the brief's own example. UI hiding is not enforcement. Any disagreement about where a permission check belongs is settled: at the API, before data leaves the server.</p>
+    <p><strong>5. Every mutation — of records, and of configuration — is an append-only audit event with an actor.</strong> The clinic will be audited; the board revises formulas; statuses are renamed weekly. In a platform where behaviour is data, "who changed what, when" about <em>config</em> is as important as about records. It also settles the debugging argument: history is never reconstructed from guesswork, it is read.</p>
+  </div>
+
+  <h3><span class="q-num">8</span>What didn't fit?</h3>
+  <div class="qa">
+    <p><strong>Client B's eligibility scoring.</strong> Statuses, fields, notifications and queues all reduce to configuration a non-programmer could author. The score does not: it calls an external registry API, computes a ratio, applies recency-weighted grant history, applies board-set thematic weights, auto-rejects below a threshold — and the board rewrites the formula itself yearly. That is a program, and pretending a config format can express it leads to a homemade expression language that is worse than code: untyped, untested, and impossible to debug.</p>
+    <p>What I would do: admit it is code, and quarantine it. The platform gets a <em>computation</em> extension point: a versioned module with a narrow contract (record in, score + explanation out), written and deployed by us, with its <em>parameters</em> — weights, thresholds, per-round settings — kept in config where the board's annual changes usually land. Every score stores the module version and inputs that produced it, for the audit-trail reasons in question 1. This is the one place the "no client-specific code" rule bends, and the design is honest about it: bent in one narrow, named, versioned place instead of silently everywhere.</p>
+    <p class="muted">Half-fits, for completeness: Client A's resident identity resolution is genuinely hard but at least generic (a platform "possible duplicate" feature, suggest-and-confirm); cross-field validation rules ("project end after project start") don't fit today's definition format and I'd extend it with a small declarative rule set — discussed in the Part B README.</p>
+  </div>
+
+  <h3><span class="q-num">9</span>What would you build first?</h3>
+  <div class="qa">
+    <p><strong>First: the definition-driven record core, carrying one real client end-to-end.</strong> Concretely: tenancy with RLS and the auth integration; the definition store with versioning; the validation library (Part B, essentially) enforcing definitions at the API; record storage; a generic form rendered from the form description; a generic queue screen driven by a view config; and the append-only audit log. Then onboard <strong>Client A</strong> as configuration only and let real 200-a-day traffic hit it; it has the simplest workflow and the highest volume, with none of the medical-grade sensitivity to get right in week one.</p>
+    <p>Two things are in the core that people often defer: <strong>isolation</strong> and <strong>audit</strong>. Neither can be retrofitted honestly: bolting RLS onto a live schema, or reconstructing an audit trail after the fact, is the kind of quiet papering-over this platform exists to end.</p>
+    <p><strong>Later, by choice:</strong> the notification rules engine (Client A's single Resolved-SMS gets a minimal hard-shaped version first; the general rule engine comes with Client B's delayed emails); eligibility scoring (needs the extension point, and rounds are quarterly, so there is calendar time); reporting dashboards (the director's totals start as plain SQL behind an endpoint); resident identity matching (suggest-only, after real duplicate data exists to tune against); client self-service admin (our staff author config through internal screens first); and Client C last among the three, not because it's least important but because its field-level permissions and audit expectations deserve a platform that has already carried live traffic.</p>
+  </div>
+</section>
+
+<section id="part-b">
+  <h2><span class="sec-num">Part B</span>Coding exercise</h2>
+  <div class="card">
+    <p><strong>Code:</strong> <a href="https://github.com/mjremetio/tech_exam/tree/main/part-b">github.com/mjremetio/tech_exam</a></p>
+    <p>A TypeScript library, roughly 600 lines plus tests: <code>validateRecord(definition, record)</code> returns structured errors and warnings; <code>describeForm(definition)</code> returns a renderer-agnostic form description. No client knowledge anywhere in the code: all three sample clients (and a fourth invented in the tests) go through the same paths. 30 tests cover every sample record and the awkward cases the samples push on: <code>false</code> and <code>0</code> as real values, empty string vs <code>null</code> vs absent, stringly-typed numbers and booleans, impossible calendar dates, unknown extra fields, and broken definitions.</p>
+    <p class="muted">The README in the repository covers the decisions the format left open (no type coercion; unknown fields warn rather than block; empty-anything is "missing"), what the format cannot express (cross-field rules like "project end after start", found via sample record B-2), and the full example of the Part 2 output.</p>
+  </div>
+</section>
+
+<section id="part-c">
+  <h2><span class="sec-num">Part C</span>Closing reflection</h2>
+  <p><strong>What I left out on purpose.</strong> There is no workflow engine design in detail, no API surface, no UI sketches, and the notification engine is described in one sentence. The exercise asks for a foundation, and I spent the space on the four decisions that are expensive to reverse: the definition format, the tenancy model, the config-not-code boundary, and where that boundary breaks (scoring). Everything I left out can be built on top of those without contradiction; nothing I left out could repair them if they were wrong.</p>
+  <p><strong>What I noticed and chose not to address.</strong> The storm-day burst of 4,000 reports is less a database problem than an SMS-cost and queue-backpressure problem; it is why sending is a background job rather than an inline call, but I did not size it. Client C's "subject to Israeli privacy law" almost certainly implies specific obligations (retention, breach notification, possibly residency) that I flagged as a question rather than pretending to know; designing to a law I haven't read would be exactly the quiet papering-over the brief warns against.</p>
+  <p><strong>The decision I am least confident about:</strong> shared-schema multi-tenancy with RLS, rather than schema-per-tenant or database-per-tenant. I believe it is right for operational sanity at hundreds of small tenants (one migration, one backup story, cross-tenant ops stay possible), and RLS makes the isolation real. But a clinic audit, a regulator, or a large client demanding physically separate storage would change my mind, and I would want that conversation <em>before</em> 300 tenants share hardware, not after. The design hedges: tenant-scoped everything means extracting one tenant to its own node is migration work, not redesign.</p>
+  <p><strong>What I would do differently starting again.</strong> In Part B, I would design the error model around a message catalogue from the first line instead of baking English strings in and exposing codes alongside; the codes are there, but the seam shows. In Part A, I spent early effort on the scoring problem before realising the honest answer was "this doesn't fit, and here is the quarantine" — I would reach that faster by asking "could an admin screen express this?" of every requirement at the start.</p>
+  <p><strong>What I wanted to build and didn't get to:</strong> the declarative cross-field constraint extension for the definition format, with validation of the definitions themselves. That is the format gap sample record B-2 (a project that ends before it starts) is pointing at.</p>
+</section>
+
+<section id="ai">
+  <h2><span class="sec-num">AI</span>How I used AI on this exercise</h2>
+  <p><strong>Tools and models.</strong> I used Claude (Anthropic), through the Claude desktop app, as the primary tool across the whole exercise, and Claude Code in my editor at the end, to run the tests and demo on my own machine before submitting. No other models or AI tools were involved.</p>
+  <p><strong>What I used it for.</strong> Reading the brief and starter package closely (including having it enumerate what each sample record was designed to test); thinking through the architecture questions in long back-and-forth before writing the answers; drafting and iterating the Part B library and its tests; drafting the prose of this page; and building the page itself.</p>
+  <p><strong>How I worked with it.</strong> Mostly extended back-and-forth rather than single prompts: I gave it the full brief and starter data up front, made the framing decisions (language, the config-not-code stance, no type coercion), and had it draft, then challenged the drafts — asking it to argue against its own choices, tighten answers that were padding, and justify each validation decision against a specific sample record. Nothing this page claims about the code went out unverified: before submitting I ran the full test suite and the demo over all eleven sample records on my own machine, and checked that the README's example output matches what the code actually prints.</p>
+  <p><strong>Something I rejected, and why.</strong> Claude's first instinct on unknown extra fields was strict: any key the definition didn't name should make the record invalid. I rejected that. Record A-2's note says some of its contents "look like problems but are not", and <code>operator_initials</code> reads like a leftover from the old per-client system, the kind of thing a migration or an integration will send. Blocking the record punishes the submitter for the platform's own stale definition; silently dropping the field hides a real signal that the definition is out of date. So unknown fields became warnings: the record goes through, the drift is surfaced. If a client needed strictness (a clinic under audit, say) I would make it a per-definition setting rather than a global rule.</p>
+  <p><strong>Where it helped least.</strong> Getting the code running on my actual machine. The model reasons well about code it can see, but it cannot see a laptop: my default Node was too old for the toolchain, and a dependency install built for the wrong CPU architecture had to be thrown away and redone before the tests would start. Every instruction sounded authoritative, and each failed against some local fact the model had no way to know, so that stretch was ordinary debugging with a confident narrator. The pattern across the exercise: it helped most where its claims could be checked by running something, and least where the ground truth lived outside the conversation.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    Mark Joseph Remetio · Take-home submission · Platform Foundation exercise · July 2026
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+{
+  "client": "client-b",
+  "record_type": "grant_application",
+  "fields": [
+    {
+      "name": "organisation_name",
+      "label": "Registered organisation name",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 200 }
+    },
+    {
+      "name": "registry_number",
+      "label": "Non-profit registry number",
+      "type": "text",
+      "required": true,
+      "constraints": { "pattern": "^[0-9]{9}$" }
+    },
+    {
+      "name": "contact_person",
+      "label": "Contact person",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 120 }
+    },
+    {
+      "name": "contact_email",
+      "label": "Contact email",
+      "type": "email",
+      "required": true
+    },
+    {
+      "name": "contact_phone",
+      "label": "Contact phone",
+      "type": "phone",
+      "required": false
+    },
+    {
+      "name": "amount_requested",
+      "label": "Amount requested",
+      "type": "number",
+      "required": true,
+      "constraints": { "min": 1000, "max": 500000 }
+    },
+    {
+      "name": "funding_round",
+      "label": "Funding round",
+      "type": "choice",
+      "required": true,
+      "options": ["2026-q1", "2026-q2", "2026-q3", "2026-q4"]
+    },
+    {
+      "name": "focus_areas",
+      "label": "Focus areas",
+      "type": "multi_choice",
+      "required": true,
+      "options": ["education", "health", "environment", "welfare", "culture", "employment"],
+      "constraints": { "min_selected": 1, "max_selected": 3 }
+    },
+    {
+      "name": "project_description",
+      "label": "Project description",
+      "type": "long_text",
+      "required": true,
+      "constraints": { "min_length": 100, "max_length": 5000 }
+    },
+    {
+      "name": "project_start",
+      "label": "Project start date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "project_end",
+      "label": "Project end date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "budget_file",
+      "label": "Project budget",
+      "type": "file",
+      "required": true,
+      "constraints": { "accepted": ["pdf", "xlsx", "xls"] }
+    },
+    {
+      "name": "previously_funded",
+      "label": "Has this organisation received funding from us before?",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "annual_turnover",
+      "label": "Annual turnover",
+      "type": "number",
+      "required": false,
+      "constraints": { "min": 0 },
+      "sensitivity": "confidential"
+    }
+  ]
+}

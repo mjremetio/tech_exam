@@ -1,0 +1,59 @@
+[
+  {
+    "_note": "Expected to be valid.",
+    "patient_name": "Rivka Shaked",
+    "national_id": "301234567",
+    "date_of_birth": "1978-04-22",
+    "patient_phone": "050-7778888",
+    "referring_physician": "Dr. Amit Peretz",
+    "physician_licence": "482301",
+    "specialty": "cardiology",
+    "urgency": "urgent",
+    "clinical_notes": "Intermittent chest discomfort on exertion over the past six weeks. Family history of ischaemic heart disease. ECG unremarkable at rest.",
+    "previous_visits": 0,
+    "consent_given": true,
+    "referral_letter": "peretz-referral.pdf"
+  },
+  {
+    "_note": "Absent optional values, and a required boolean that is genuinely false.",
+    "patient_name": "Eitan Gur",
+    "national_id": "204455667",
+    "date_of_birth": "1995-11-03",
+    "patient_phone": "053-1112222",
+    "referring_physician": "Dr. Sarit Levin",
+    "physician_licence": "77120",
+    "specialty": "dermatology",
+    "urgency": "routine",
+    "clinical_notes": null,
+    "previous_visits": 0,
+    "consent_given": false
+  },
+  {
+    "_note": "Pattern and option problems.",
+    "patient_name": "Hana Mizrahi",
+    "national_id": "30112233",
+    "date_of_birth": "03/09/1962",
+    "patient_phone": "058-4445555",
+    "referring_physician": "Dr. Yael Adler",
+    "physician_licence": "ABC1234",
+    "specialty": "rheumatology",
+    "urgency": "very urgent",
+    "clinical_notes": "Progressive joint pain and morning stiffness.",
+    "previous_visits": -2,
+    "consent_given": true
+  },
+  {
+    "_note": "Missing required fields and an unexpected extra.",
+    "patient_name": "Omer Katz",
+    "date_of_birth": "2011-01-17",
+    "patient_phone": "054-6667777",
+    "referring_physician": "Dr. Nadav Stern",
+    "physician_licence": "553012",
+    "specialty": "endocrinology",
+    "clinical_notes": "Referred for evaluation of delayed growth.",
+    "previous_visits": 3,
+    "consent_given": true,
+    "guardian_name": "Shira Katz",
+    "insurance_provider": "Clalit"
+  }
+]

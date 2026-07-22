@@ -1,0 +1,89 @@
+{
+  "client": "client-c",
+  "record_type": "patient_referral",
+  "fields": [
+    {
+      "name": "patient_name",
+      "label": "Patient name",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 120 }
+    },
+    {
+      "name": "national_id",
+      "label": "National ID number",
+      "type": "text",
+      "required": true,
+      "constraints": { "pattern": "^[0-9]{9}$" },
+      "sensitivity": "confidential"
+    },
+    {
+      "name": "date_of_birth",
+      "label": "Date of birth",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "patient_phone",
+      "label": "Patient phone",
+      "type": "phone",
+      "required": true
+    },
+    {
+      "name": "referring_physician",
+      "label": "Referring physician",
+      "type": "text",
+      "required": true,
+      "constraints": { "max_length": 120 }
+    },
+    {
+      "name": "physician_licence",
+      "label": "Physician licence number",
+      "type": "text",
+      "required": true,
+      "constraints": { "pattern": "^[0-9]{5,7}$" }
+    },
+    {
+      "name": "specialty",
+      "label": "Specialty requested",
+      "type": "choice",
+      "required": true,
+      "options": ["cardiology", "dermatology", "endocrinology", "neurology", "orthopaedics", "gastroenterology"]
+    },
+    {
+      "name": "urgency",
+      "label": "Urgency level",
+      "type": "choice",
+      "required": true,
+      "options": ["routine", "urgent", "immediate"]
+    },
+    {
+      "name": "clinical_notes",
+      "label": "Clinical notes",
+      "type": "long_text",
+      "required": false,
+      "constraints": { "max_length": 4000 },
+      "sensitivity": "confidential"
+    },
+    {
+      "name": "previous_visits",
+      "label": "Number of previous visits to this clinic",
+      "type": "number",
+      "required": true,
+      "constraints": { "min": 0, "max": 500 }
+    },
+    {
+      "name": "consent_given",
+      "label": "Patient consented to sharing records",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "referral_letter",
+      "label": "Referral letter",
+      "type": "file",
+      "required": false,
+      "constraints": { "accepted": ["pdf", "jpg", "png"] }
+    }
+  ]
+}
