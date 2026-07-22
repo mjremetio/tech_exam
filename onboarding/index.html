@@ -137,6 +137,41 @@
   </table>
   <p class="muted">Why records are documents (JSONB) inside a relational skeleton, and why the whole thing sits behind row-level security rather than a database per tenant, is argued in Part A, questions 4 and 6. This appendix shows only how a client conversation fills it.</p>
 
+  <h3>The schema, as DDL</h3>
+  <p>The same tables as runnable Postgres — the versioned JSONB definition store, the record store it stamps, and the row-level-security policy that <em>is</em> the isolation guarantee. Full file: <a href="/architecture/schema.sql">architecture/schema.sql</a>.</p>
+  <details>
+    <summary>the load-bearing tables + the RLS policy</summary>
+    <pre>-- Field definitions: the Part B format, versioned, immutable once published.
+create table record_definitions (
+  id           uuid primary key default gen_random_uuid(),
+  tenant_id    uuid not null references tenants(id),
+  record_type  text not null,
+  version      int  not null,
+  status       text not null default 'draft'
+                 check (status in ('draft','published','retired')),
+  fields       jsonb not null,        -- the fields[] array validateRecord reads
+  unique (tenant_id, record_type, version)
+);
+
+-- Submitted records: documents, tagged with the definition version that
+-- validated them, so old records keep their original meaning.
+create table records (
+  id             uuid primary key default gen_random_uuid(),
+  tenant_id      uuid not null references tenants(id),
+  definition_id  uuid not null references record_definitions(id),
+  record_type    text not null,
+  status         text not null,
+  data           jsonb not null
+);
+
+-- Row-Level Security: the tenancy guarantee. Applied to every tenant-scoped
+-- table; a query that forgets a tenant filter returns zero rows, not a breach.
+alter table records enable row level security;
+create policy records_tenant_isolation on records
+  using      (tenant_id = current_setting('app.tenant_id')::uuid)
+  with check (tenant_id = current_setting('app.tenant_id')::uuid);</pre>
+  </details>
+
 </div></main>
 
 <footer>
