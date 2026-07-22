@@ -1,5 +1,4 @@
-node_modules/
-dist/
+part-b
+node_modules
 .DS_Store
 SUBMISSION-GUIDE.md
-.vercel
